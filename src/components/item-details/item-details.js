@@ -1,42 +1,42 @@
 import React, {Component} from 'react';
 
-import './person-details.css';
+import './item-details.css';
 import SwapiService from "../../services/swapi-service";
 import Spinner from "../spinner/spinner";
 import ErrorButton from "../error-button/error-button";
 
 
-export default class PersonDetails extends Component {
+export default class ItemDetails extends Component {
 
     swapiService = new SwapiService();
 
     state = {
-        person: null,
+        item: null,
         loading: true
     };
 
     componentDidMount() {
-        this.updatePerson()
+        this.updateItem()
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.personId === this.props.personId ) {
-            this.updatePerson();
+        if (prevProps.itemId === this.props.itemId ) {
+            this.updateItem();
         }
     }
 
-    updatePerson() {
-        const { personId } = this.props;
+    updateItem() {
+        const { itemId } = this.props;
 
-        if (!personId) {
+        if (!itemId) {
             return;
         }
 
         this.swapiService
-            .getPerson(personId)
-            .then(person => {
+            .getPerson(itemId)
+            .then(item => {
                 this.setState({
-                    person,
+                    item,
                     loading: false
                 })
             })
@@ -44,9 +44,9 @@ export default class PersonDetails extends Component {
 
     render() {
 
-        if (!this.state.person) {
+        if (!this.state.item) {
             return (
-                <div className="person-details card">
+                <div className="item-details card">
                     <span>
                         Select a person from a list
                     </span>
@@ -54,15 +54,14 @@ export default class PersonDetails extends Component {
             )
         }
 
-        const { personId } = this.props;
-        const { loading, person: { id }, person } = this.state;
-
-        const loadingPerson = loading || id !== personId ?
+        const { itemId } = this.props;
+        const { loading, item: { id }, item } = this.state;
+        const loadingPerson = loading ?
             <Spinner /> :
-            <PersonView person={person} />;
+            <ItemView item={item} />;
 
         return(
-            <div className="person-details card">
+            <div className="item-details card">
                 { loadingPerson }
             </div>
         )
@@ -71,9 +70,9 @@ export default class PersonDetails extends Component {
 }
 
 
-const PersonView = ({ person }) => {
+const ItemView = ({ item }) => {
 
-    const {id, name, gender, birthYear, eyeColor} = person;
+    const {id, name, gender, birthYear, eyeColor} = item;
 
     return (
         <React.Fragment>
